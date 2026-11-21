@@ -82,7 +82,7 @@ struct EvalTests {
     @Test func undefinedArgument() {
         let expression = identityApplication(to: .variable(name: "missing"))
 
-        #expect(throws: evalErrors.self) {
+        #expect(throws: evalError.self) {
             _ = try eval(exp: expression, env: [:])
         }
     }
@@ -90,7 +90,7 @@ struct EvalTests {
     @Test func unusedArgumentEval() {
         let expression = unusedApplication(to: .variable(name: "missing"))
 
-        #expect(throws: evalErrors.self) {
+        #expect(throws: evalError.self) {
             _ = try eval(exp: expression, env: [:])
         }
     }
@@ -102,10 +102,4 @@ private func expect42(_ result: Val) {
         return
     }
     #expect(value == 42)
-}
-
-@Test func example() {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    // Swift Testing Documentation
-    // https://developer.apple.com/documentation/testing
 }

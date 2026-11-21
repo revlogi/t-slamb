@@ -15,6 +15,10 @@ enum Val {
 
 typealias Environment = [String: Val]
 
+struct evalError: Error {
+    let description: String
+}
+
 func bind_var(variable: String, value: Val, env: Environment) -> Environment {
     var newEnv = env
     newEnv[variable] = value
@@ -25,7 +29,7 @@ func eval(exp: Expr, env: Environment) throws -> Val {
     switch exp {
     case let .variable(name):
         guard let res = env[name] else {
-            throw evalErrors(description: "Can't find this variable.")
+            throw evalError(description: "Can't find this variable.")
         }
         return res
     case let .number(value):
@@ -37,7 +41,7 @@ func eval(exp: Expr, env: Environment) throws -> Val {
     case let .apply(fun, arg):
         let function = try eval(exp: fun, env: env)
         guard case let .closure(param, body, cenv) = function else {
-            throw evalErrors(description: "Not a function.")
+            throw evalError(description: "Not a function.")
         }
         let newEnv = try bind_var(variable: param, value: eval(exp: arg, env: env), env: cenv)
         return try eval(exp: body, env: newEnv)
